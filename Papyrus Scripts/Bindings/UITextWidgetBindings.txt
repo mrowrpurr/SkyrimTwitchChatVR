@@ -1,0 +1,2 @@
+ExampleTextWidget $Quest(ExampleTextWidget)
+TestShowingWidget $Quest(TestShowingWidget)
