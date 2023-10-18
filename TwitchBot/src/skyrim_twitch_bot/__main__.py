@@ -21,16 +21,22 @@ class TwitchBot(commands.Bot):
         print(f"Ready | {self.nick}")
 
     async def event_message(self, message):
-        formatted_message = f"{message.author.name}: {message.content}"
-        self.gui_callback(formatted_message)
-        await self.send_to_websocket(formatted_message)
+        twitch_username = message.author.name
+        twitch_color = (message.author.colour or "#000000").replace("#", "0x")  # Default to black if color is None
+        twitch_message = message.content
 
-    async def send_to_websocket(self, message: str):
+        self.gui_callback(f"{twitch_color}|{twitch_username}: {twitch_message}")
+
         chunk_size = 69
-        for i in range(0, len(message), chunk_size):
-            chunk = message[i:i+chunk_size]
-            async with websockets.connect("ws://localhost:6969") as websocket:
+        for i in range(0, len(twitch_message), chunk_size):
+            if i == 0:
+                chunk = f"{twitch_color}|{twitch_username}: {twitch_message[i:i+chunk_size]}"
+            else:
+                chunk = f"{twitch_color}|    {twitch_message[i:i+chunk_size]}"
+            async with websockets.connect("ws://mrowr:6969") as websocket:
                 await websocket.send(chunk)
+                await asyncio.sleep(0.1)  # 100 ms sleep to ensure ordering
+
 
 
 class TwitchBotWindow(QWidget):

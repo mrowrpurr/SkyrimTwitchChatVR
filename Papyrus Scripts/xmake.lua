@@ -30,10 +30,21 @@ target("Deploy Papyrus Scripts")
         for mods_folder_path in pairs(folder_paths) do
             local mod_folder = path.join(mods_folder_path, mod_name)
             print("Copying compiled scripts to " .. mod_folder)
+
+            if os.isdir(path.join(mod_folder, "interface")) then
+                os.rm(path.join(mod_folder, "interface"))
+            end
+            if os.isdir(path.join(mod_folder, "Scripts")) then
+                os.rm(path.join(mod_folder, "Scripts"))
+            end
+            
             os.mkdir(path.join(mod_folder, "Scripts", "Source"))
             os.mkdir(path.join(mod_folder, "Scripts", "Bindings"))
+
             os.cp(path.join(compiled_scripts_folder, "*.pex"), path.join(mod_folder, "Scripts"))
             os.cp(path.join("*", "*.psc"), path.join(mod_folder, "Scripts", "Source"))
+            os.cp(path.join("interface"), path.join(mod_folder, "interface"))
             os.cp(path.join("*", "Bindings", "*"), path.join(mod_folder, "Scripts", "Bindings"))
+            os.cp("TwitchChatVR.json", mod_folder)
         end
     end)

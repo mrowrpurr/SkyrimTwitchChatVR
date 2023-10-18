@@ -1,2 +1,0 @@
-TwitchChatTextWidget $Quest(TwitchChatTextWidget)
-TwitchChatWidgetManager $Quest(TwitchChatWidgetManager)

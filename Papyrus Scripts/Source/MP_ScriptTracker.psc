@@ -1,15 +1,19 @@
-scriptName ScriptTracker hidden
+scriptName MP_ScriptTracker hidden
 
 function SaveScript(Form theScriptForm, string nameOfScript = "") global
     if ! nameOfScript
         nameOfScript = __GetNameOfScript(theScriptForm)
     endIf
-    Debug.Notification("SAVE: " + nameOfScript)
     JDB.solveFormSetter(".mrowr.scripts." + nameOfScript, theScriptForm, createMissingKeys = true)
+    Debug.Trace("(Widget) Save Script: " + nameOfScript + " - " + theScriptForm)
 endFunction
 
 Form function GetScript(string nameOfScript) global
-    return JDB.solveForm(".mrowr.scripts." + nameOfScript)
+    Form found = JDB.solveForm(".mrowr.scripts." + nameOfScript)
+    if ! found
+        Debug.Trace("(Widget) Get Script: " + nameOfScript + " - Not Found")
+    endIf
+    return found
 endFunction
 
 string function __GetNameOfScript(Form theScriptForm) global

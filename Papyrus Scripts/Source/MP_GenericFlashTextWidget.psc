@@ -1,4 +1,4 @@
-scriptName GenericFlashTextWidget extends SKI_WidgetBase
+scriptName MP_GenericFlashTextWidget extends SKI_WidgetBase
 {
 ### Note: as a SkyUI widget, it must be attached to a Quest (not an object)
 
@@ -263,3 +263,12 @@ float function GetY()
     return self.Y
 endFunction
 
+function MoveTo(float _x, float _y)
+    self.X = _x
+    self.Y = _y
+endFunction
+
+function Resize(int _width, int _height)
+    self.Width = _width
+    self.Height = _height
+endFunction
