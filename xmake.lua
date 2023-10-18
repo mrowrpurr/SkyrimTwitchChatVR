@@ -10,4 +10,4 @@ add_repositories("SkyrimScripting https://github.com/SkyrimScripting/Packages.gi
 --                                     global_macro_functions, dependency_injection, ...
 add_repositories("MrowrLib https://github.com/MrowrLib/Packages.git")
 
-includes("*/*/xmake.lua") -- Include all the projects and their targets :)
+includes("*/xmake.lua") -- Include all the projects and their targets :)

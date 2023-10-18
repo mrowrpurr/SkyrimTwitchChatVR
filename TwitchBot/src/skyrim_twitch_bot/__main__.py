@@ -1,6 +1,7 @@
 import asyncio
 import os
 
+import websockets
 from dotenv import load_dotenv
 from PySide6.QtCore import QTimer, Slot
 from PySide6.QtWidgets import (QApplication, QPushButton, QTextEdit,
@@ -8,6 +9,7 @@ from PySide6.QtWidgets import (QApplication, QPushButton, QTextEdit,
 from twitchio.ext import commands
 
 load_dotenv(dotenv_path="D:/Dropbox/Twitch/Bots/Access Tokens/.env")
+
 
 class TwitchBot(commands.Bot):
 
@@ -19,7 +21,17 @@ class TwitchBot(commands.Bot):
         print(f"Ready | {self.nick}")
 
     async def event_message(self, message):
-        self.gui_callback(message.content)
+        formatted_message = f"{message.author.name}: {message.content}"
+        self.gui_callback(formatted_message)
+        await self.send_to_websocket(formatted_message)
+
+    async def send_to_websocket(self, message: str):
+        chunk_size = 69
+        for i in range(0, len(message), chunk_size):
+            chunk = message[i:i+chunk_size]
+            async with websockets.connect("ws://localhost:6969") as websocket:
+                await websocket.send(chunk)
+
 
 class TwitchBotWindow(QWidget):
 
@@ -49,12 +61,10 @@ class TwitchBotWindow(QWidget):
     @Slot()
     def toggle_connection(self):
         if self.bot:
-            # Disconnect logic (TwitchIO doesn"t provide a disconnect method)
             self.connect_button.setText("Connect")
             self.bot = None
             self.timer.stop()
         else:
-            load_dotenv(dotenv_path="path/to/your/.env")
             irc_token = os.getenv("TMI_TOKEN")
             client_id = os.getenv("CLIENT_ID")
             bot_username = os.getenv("BOT_USERNAME")
@@ -70,10 +80,11 @@ class TwitchBotWindow(QWidget):
             )
             loop.create_task(self.bot.start())
             self.connect_button.setText("Disconnect")
-            self.timer.start(0)  # Run as fast as possible
+            self.timer.start(0)
 
     def update_textbox(self, message: str):
         self.text_edit.append(message)
+
 
 def main():
     import sys
